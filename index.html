@@ -50,20 +50,15 @@
     let mode = "normal";
     let stringBuffer = "";
 
-    function print(str) {
+    window.print = (str) => {
       $('#display').value += '\n' + str;
+      $('#display').scrollTop = $('#display').scrollHeight;
     }
     
     function printStack() {
       let str = "> ";
       window.stack.forEach((item) => {
-        if (typeof item == "string") {
-          str += '"';
-          str += item;
-          str += '"';
-        } else {
-          str += item;
-        }
+        str += JSON.stringify(item);
         str += ' ';
       })
       print(str);
@@ -74,8 +69,6 @@
       tokens.forEach((t) => {
         interpretToken(t);
       })
-      printStack();
-
     }
 
     function interpretToken(token) {
@@ -86,6 +79,10 @@
           return;
         }
         token = token.toLowerCase();
+        if (window.dict[token]) {
+          interpret(window.dict[token]);
+          return;
+        }
         try {
           builtins[token]();
         } catch (err) {
@@ -109,6 +106,7 @@
       let line = $('#input').value;
       interpret(line);
       $('#input').value = '';
+      printStack();
     }
 
     $('#run').onclick = run;
@@ -127,11 +125,22 @@
       }
     }
 
+
     let builtins = {
       '"': startString,
       "'": startString,
       'print': () => print(pop()),
-      'js': javascript
+      'js': javascript,
+      'jsd': () => eval(pop())
+    }
+
+    window.dict = {
+      'add': 'swap " pop()+pop() " js',
+      'func': '" dict[pop()] = pop() " jsd',
+      'swap': '" let a = pop(); let b = pop(); push(a); push(b) " jsd',
+      'dict': '" push(JSON.stringify(dict)) " jsd',
+      'drop': '" pop(); " jsd',
+      'dup': '" let a = pop(); push(a); push(a) " jsd'
     }
   </script>
 </body>
