@@ -2,6 +2,10 @@
 
 A toy Forth-like language, designed to run in mobile browsers and not to struggle with a phone's keyboard.
 
-## License 
+**See it live here:**
+
+[https://wattle-bird.github.io/piccolo/index.html](https://wattle-bird.github.io/piccolo/index.html)
+
+## License
 
 MIT
