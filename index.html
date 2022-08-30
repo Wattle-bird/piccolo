@@ -1,0 +1,120 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+
+    * {
+      font-size: 16px;
+    }
+
+    #container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    #display {
+      flex-grow: 1;
+    }
+
+    #bottom-bar {
+      display: flex;
+    }
+
+    #input {
+      flex-grow: 1;
+      font-family: monospace;
+    }
+
+    #run {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <textarea id="display"></textarea>
+    <div id="display2"></div>
+    <div id="bottom-bar">
+      <input type="text" id="input">
+      <button id="run">Run</button>
+    </div>
+  </div>
+  <script>
+    let $ = document.querySelector.bind(document);
+    $('#display').value = 'Welcome to Piccolo :3'
+    window.stack = [];
+    let mode = "normal";
+    let stringBuffer = "";
+
+    function print(str) {
+      $('#display').value += '\n' + str;
+    }
+    
+    function printStack() {
+      let str = "> ";
+      window.stack.forEach((item) => {
+        if (typeof item == "string") {
+          str += '"';
+          str += item;
+          str += '"';
+        } else {
+          str += item;
+        }
+        str += ' ';
+      })
+      print(str);
+    }
+
+    function interpret(line) {
+      let tokens = line.split(' ');
+      tokens.forEach((t) => {
+        interpretToken(t);
+      })
+      printStack();
+    }
+
+    function interpretToken(token) {
+      if (mode == "normal") {
+        if (token.length == 0 ) return;
+        token = token.toLowerCase();
+        try {
+          window.dictionary[token]();
+        } catch (err) {
+          print(err.message);
+        }
+      } else if (mode == "string") {
+        if (token == "'" || token == '"') {
+          mode = "normal";
+          stack.push(stringBuffer);
+          stringBuffer = '';
+          return;
+        }
+        if (stringBuffer.length !== 0) {
+          stringBuffer += ' ';
+        }
+        stringBuffer += token;
+      }
+    }
+
+    function run() {
+      let line = $('#input').value;
+      interpret(line)
+    }
+
+    $('#run').onclick = run;
+
+
+    // *** DICT WORDS ***
+    function startString() {
+      mode = "string";
+    }
+
+    window.dictionary = {
+      '"': startString,
+      "'": startString,
+      'print': () => print(window.stack.pop())
+
+    }
+  </script>
+</body>
