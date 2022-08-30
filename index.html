@@ -79,6 +79,12 @@
           window.stack.push(Number(token));
           return;
         }
+        if (token[0] == '"' || token[0] == "'") {
+          token = token.slice(1);
+          mode = "string";
+          stringMode(token);
+          return;
+        }
         token = token.toLowerCase();
         if (window.dict[token]) {
           interpret(window.dict[token]);
@@ -90,19 +96,33 @@
           print(err.message);
         }
       } else if (mode == "string") {
-        if (token == "'" || token == '"') {
-          mode = "normal";
-          stack.push(stringBuffer);
-          stringBuffer = '';
-          return;
-        } else if (token == '\\"' || token == "\\'") {
-          token = '"'
-        }
-        if (stringBuffer.length !== 0) {
-          stringBuffer += ' ';
-        }
-        stringBuffer += token;
+        stringMode(token);
       }
+    }
+
+    function stringMode(token) {
+      if (token == "'" || token == '"') {
+        mode = "normal";
+        stack.push(stringBuffer);
+        stringBuffer = '';
+        return;
+      }
+      if (stringBuffer.length !== 0) {
+        stringBuffer += ' ';
+      }
+
+      let lastChar = token.slice(-1);
+      if (token == '\\"' || token == "\\'") {
+        token = '"'
+      } else if (lastChar == '"' || lastChar == "'") {
+        token = token.slice(0, -1);
+        mode = "normal";
+        stringBuffer += token;
+        stack.push(stringBuffer);
+        stringBuffer = '';
+        return;
+      }
+      stringBuffer += token;
     }
 
     function run() {
@@ -156,7 +176,8 @@
       'ifelse': '" let comp = pop(),func2 = pop(), func1 = pop(); if (comp) interpret(func1); else interpret(func2) " jsd',
       'last': '" last " js',
       'wordsarray': '" Object.keys(dict) " js',
-      'words': 'wordsarray " pop().join(\' \') " js print'
+      'words': 'wordsarray " pop().join(\' \') " js print',
+      'show': '" dict[pop()] " js print'
     }
   </script>
 </body>
