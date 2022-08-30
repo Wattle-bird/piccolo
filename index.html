@@ -120,11 +120,18 @@
       mode = "string";
     }
 
+    function javascript() {
+      let returnValue = eval(pop());
+      if (returnValue !== undefined) {
+        push(returnValue);
+      }
+    }
+
     let builtins = {
       '"': startString,
       "'": startString,
       'print': () => print(pop()),
-      'js': () => eval(pop())
+      'js': javascript
     }
   </script>
 </body>
