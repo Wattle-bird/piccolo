@@ -185,7 +185,7 @@
       'ifelse': '" let comp = pop(),func2 = pop(), func1 = pop(); if (comp) interpret(func1); else interpret(func2) " jsd',
       'last': '" last " js',
       'wordsarray': '" Object.keys(dict) " js',
-      'words': 'wordsarray " pop().join(\' \') " js print',
+      'words': 'wordsarray " pop().join(` `) " js print',
       'show': '" dict[pop()] " js print',
       'dict': '"dictPretty()" js'
     }
