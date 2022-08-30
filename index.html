@@ -44,6 +44,9 @@
     let $ = document.querySelector.bind(document);
     $('#display').value = 'Welcome to Piccolo :3\n\nWhat is this? See:\nhttps://github.com/Wattle-bird/piccolo\n==='
     window.stack = [];
+    window.pop = () => window.stack.pop();
+    window.push = (v) => window.stack.push(v);
+
     let mode = "normal";
     let stringBuffer = "";
 
@@ -72,14 +75,19 @@
         interpretToken(t);
       })
       printStack();
+
     }
 
     function interpretToken(token) {
       if (mode == "normal") {
         if (token.length == 0 ) return;
+        if (!isNaN(token)) {
+          window.stack.push(Number(token));
+          return;
+        }
         token = token.toLowerCase();
         try {
-          window.dictionary[token]();
+          builtins[token]();
         } catch (err) {
           print(err.message);
         }
@@ -99,10 +107,12 @@
 
     function run() {
       let line = $('#input').value;
-      interpret(line)
+      interpret(line);
+      $('#input').value = '';
     }
 
     $('#run').onclick = run;
+    $('#input').onkeydown = (event) => {if (event.keyCode === 13) run();}
 
 
     // *** DICT WORDS ***
@@ -110,11 +120,11 @@
       mode = "string";
     }
 
-    window.dictionary = {
+    let builtins = {
       '"': startString,
       "'": startString,
-      'print': () => print(window.stack.pop())
-
+      'print': () => print(pop()),
+      'js': () => eval(pop())
     }
   </script>
 </body>
