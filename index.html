@@ -46,6 +46,7 @@
     window.stack = [];
     window.pop = () => window.stack.pop();
     window.push = (v) => window.stack.push(v);
+    window.last = "";
 
     let mode = "normal";
     let stringBuffer = "";
@@ -64,7 +65,7 @@
       print(str);
     }
 
-    function interpret(line) {
+    window.interpret = (line) => {
       let tokens = line.split(' ');
       tokens.forEach((t) => {
         interpretToken(t);
@@ -94,6 +95,8 @@
           stack.push(stringBuffer);
           stringBuffer = '';
           return;
+        } else if (token == '\\"' || token == "\\'") {
+          token = '"'
         }
         if (stringBuffer.length !== 0) {
           stringBuffer += ' ';
@@ -104,7 +107,9 @@
 
     function run() {
       let line = $('#input').value;
+      print('< ' + line);
       interpret(line);
+      window.last = line;
       $('#input').value = '';
       printStack();
     }
@@ -129,7 +134,6 @@
     let builtins = {
       '"': startString,
       "'": startString,
-      'print': () => print(pop()),
       'js': javascript,
       'jsd': () => eval(pop())
     }
@@ -140,7 +144,19 @@
       'swap': '" let a = pop(); let b = pop(); push(a); push(b) " jsd',
       'dict': '" dict " js',
       'drop': '" pop(); " jsd',
-      'dup': '" let a = pop(); push(a); push(a) " jsd'
+      'dup': '" let a = pop(); push(a); push(a) " jsd',
+      'print': '" print(pop()) " jsd',
+      'tojson': '" JSON.stringify(pop()) " js',
+      'fromjson': '" JSON.parse(pop()) " js',
+      'true': '" true " js',
+      'false': '" false " js',
+      'length': '" stack.length " js',
+      'eval': '" interpretToken(pop()) " jsd',
+      'if': '" let comp = pop(); let func = pop(); if (comp) interpretToken(func) " jsd',
+      'ifelse': '" let comp = pop(),func2 = pop(), func1 = pop(); if (comp) interpret(func1); else interpret(func2) " jsd',
+      'last': '" last " js',
+      'wordsarray': '" Object.keys(dict) " js',
+      'words': 'wordsarray " pop().join(\' \') " js print'
     }
   </script>
 </body>
