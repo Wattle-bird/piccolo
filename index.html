@@ -150,6 +150,15 @@
       }
     }
 
+    window.dictPretty = () => {
+      print('{')
+      for (const [key, value] of Object.entries(dict)) {
+        print(`  ${key}: ${value}`);
+      }
+      print('}')
+
+    }
+
 
     let builtins = {
       '"': startString,
@@ -162,7 +171,7 @@
       'add': 'swap " pop()+pop() " js',
       'func': '" dict[pop()] = pop() " jsd',
       'swap': '" let a = pop(); let b = pop(); push(a); push(b) " jsd',
-      'dict': '" dict " js',
+      'dictobject': '" dict " js',
       'drop': '" pop(); " jsd',
       'dup': '" let a = pop(); push(a); push(a) " jsd',
       'print': '" print(pop()) " jsd',
@@ -177,7 +186,8 @@
       'last': '" last " js',
       'wordsarray': '" Object.keys(dict) " js',
       'words': 'wordsarray " pop().join(\' \') " js print',
-      'show': '" dict[pop()] " js print'
+      'show': '" dict[pop()] " js print',
+      'dict': '"dictPretty()" js'
     }
   </script>
 </body>
