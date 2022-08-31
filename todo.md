@@ -1,6 +1,6 @@
+- variables
+  - set by referencing its name ending in comma
 - editor
-  - X break tokens by any whitespace
-  - X text box and run
   - upload file
   - download file
   - runtime display?
@@ -15,8 +15,5 @@
 - dash delimit multi-words
 - minimize internal words and move to extras doc
 - document internal words
-- variables
-  - get by referencing its name
-  - set by referencing its name ending in comma
 - compile time functions
 - better display

@@ -52,6 +52,7 @@
     window.pop = () => window.stack.pop();
     window.push = (v) => window.stack.push(v);
     window.last = "";
+    window.vars = {};
 
     let mode = "normal";
     let stringBuffer = "";
@@ -95,6 +96,10 @@
           interpret(window.dict[token]);
           return;
         }
+        if (window.vars[token]) {
+          push(window.vars[token]);
+          return;
+        }
         try {
           builtins[token]();
         } catch (err) {
@@ -132,6 +137,7 @@
 
     function run() {
       let line = $('#input').value;
+      if (line == '') return;
       print('< ' + line);
       interpret(line);
       window.last = line;
@@ -155,10 +161,10 @@
       }
     }
 
-    window.dictPretty = () => {
+    window.objectPretty = (obj) => {
       print('{')
-      for (const [key, value] of Object.entries(dict)) {
-        print(`  ${key}: ${value}`);
+      for (const [key, value] of Object.entries(obj)) {
+        print(`  ${key}: ${value},`);
       }
       print('}')
 
@@ -176,25 +182,26 @@
       'add': 'swap " pop()+pop() " js',
       'func': '" dict[pop()] = pop() " jsd',
       'swap': '" let a = pop(); let b = pop(); push(a); push(b) " jsd',
-      'dictobject': '" dict " js',
       'drop': '" pop(); " jsd',
       'dup': '" let a = pop(); push(a); push(a) " jsd',
       'print': '" print(pop()) " jsd',
-      'tojson': '" JSON.stringify(pop()) " js',
-      'fromjson': '" JSON.parse(pop()) " js',
       'true': '" true " js',
       'false': '" false " js',
-      'length': '" stack.length " js',
       'eval': '" interpretToken(pop()) " jsd',
       'if': '" let comp = pop(); let func = pop(); if (comp) interpretToken(func) " jsd',
       'ifelse': '" let comp = pop(),func2 = pop(), func1 = pop(); if (comp) interpret(func1); else interpret(func2) " jsd',
       'last': '" last " js',
-      'wordsarray': '" Object.keys(dict) " js',
-      'words': 'wordsarray " pop().join(` `) " js print',
+      'word-sarray': '" Object.keys(dict) " js',
+      'words': 'word-sarray " pop().join(` `) " js print',
+      'dict-object': '" dict " js',
+      'dict': 'dict-object "objectPretty(pop())" jsd',
+      'vars-object': '"vars" js',
+      'vars': 'vars-object "objectPretty(pop())" jsd',
       'show': '" dict[pop()] " js print',
-      'dict': '"dictPretty()" js',
       '$': '"$(pop())" js',
-      'run': '"#editor" $ "interpret(pop().value)" js' // TODO TEST THIS
+      'run': '"#editor" $ "interpret(pop().value)" js',
+      'set': '"vars[pop()] = pop()" jsd',
+      'drop-all': '"stack = []" jsd'
     }
   </script>
 </body>
