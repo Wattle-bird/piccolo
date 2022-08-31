@@ -3,8 +3,6 @@
 - editor
   - upload file
   - download file
-  - runtime display?
-  - make the editor a regular program?
 - set up file sync
 - make something!
 - better string handling

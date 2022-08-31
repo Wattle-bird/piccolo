@@ -6,19 +6,23 @@
       font-size: 14px;
     }
 
-    #container {
+    #container, #default-view {
       display: flex;
       flex-direction: column;
       height: 100%;
     }
 
-    #display {
+    #console {
       flex-grow: 1;
       background: #eee;
     }
 
     #editor {
       flex-grow: 2;
+    }
+
+    #display {
+      flex-grow: 1;
     }
 
     #bottom-bar {
@@ -38,8 +42,11 @@
 </head>
 <body>
   <div id="container">
-    <textarea id="display"></textarea>
-    <textarea id="editor"></textarea>
+    <div id="default-view">
+      <textarea id="console" class="editor"></textarea>
+      <textarea id="editor" class="editor"></textarea>
+    </div>  
+    <div id="display" style="display: none;"></div>
     <div id="bottom-bar">
       <input type="text" id="input">
       <button id="run">Run</button>
@@ -47,7 +54,7 @@
   </div>
   <script>
     window.$ = document.querySelector.bind(document);
-    $('#display').value = 'Welcome to Piccolo :3\n\nWhat is this? See:\nhttps://github.com/Wattle-bird/piccolo\n==='
+    $('#console').value = 'Welcome to Piccolo :3\n\nWhat is this? See:\nhttps://github.com/Wattle-bird/piccolo\n==='
     window.stack = [];
     window.pop = () => window.stack.pop();
     window.push = (v) => window.stack.push(v);
@@ -58,8 +65,8 @@
     let stringBuffer = "";
 
     window.print = (str) => {
-      $('#display').value += '\n' + str;
-      $('#display').scrollTop = $('#display').scrollHeight;
+      $('#console').value += '\n' + str;
+      $('#console').scrollTop = $('#console').scrollHeight;
     }
     
     function printStack() {
@@ -201,7 +208,9 @@
       '$': '"$(pop())" js',
       'run': '"#editor" $ "interpret(pop().value)" js',
       'set': '"vars[pop()] = pop()" jsd',
-      'drop-all': '"stack = []" jsd'
+      'drop-all': '"stack = []" jsd',
+      'display': '"$(`#display`).style.display = `block`;$(`#default-view`).style.display = `none`" jsd',
+      'editor': '"$(`#default-view`).style.display = `flex`;$(`#display`).style.display = `none`" jsd'
     }
   </script>
 </body>
