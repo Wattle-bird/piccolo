@@ -91,28 +91,8 @@
 
     function interpretToken(token) {
       if (mode == "normal") {
-        if (token.length == 0 ) return;
-        if (!isNaN(token)) {
-          window.stack.push(Number(token));
-          return;
-        }
-        if (token[0] == '"' || token[0] == "'") {
-          token = token.slice(1);
-          mode = "string";
-          stringMode(token);
-          return;
-        }
-        token = token.toLowerCase();
-        if (window.dict[token]) {
-          interpret(window.dict[token]);
-          return;
-        }
-        if (window.vars[token]) {
-          push(window.vars[token]);
-          return;
-        }
         try {
-          builtins[token]();
+          normalMode(token)
         } catch (err) {
           print(err.message);
         }
@@ -120,6 +100,34 @@
         stringMode(token);
       }
     }
+
+    function normalMode(token) {
+    if (token.length == 0 ) return;
+      if (!isNaN(token)) {
+        window.stack.push(Number(token));
+        return;
+      }
+      if (token[0] == '"' || token[0] == "'") {
+        token = token.slice(1);
+        mode = "string";
+        stringMode(token);
+        return;
+      }
+      token = token.toLowerCase();
+      if (window.dict[token]) {
+        interpret(window.dict[token]);
+        return;
+      }
+      if (window.vars[token]) {
+        push(window.vars[token]);
+        return;
+      }
+      if (builtins[token]) {
+        builtins[token]();
+        return;
+      }
+      print(`can't find ${token})`);
+  }
 
     function stringMode(token) {
       if (token == "'" || token == '"') {
