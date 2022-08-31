@@ -3,7 +3,7 @@
   <style>
 
     * {
-      font-size: 16px;
+      font-size: 14px;
     }
 
     #container {
@@ -14,6 +14,11 @@
 
     #display {
       flex-grow: 1;
+      background: #eee;
+    }
+
+    #editor {
+      flex-grow: 2;
     }
 
     #bottom-bar {
@@ -34,14 +39,14 @@
 <body>
   <div id="container">
     <textarea id="display"></textarea>
-    <div id="display2"></div>
+    <textarea id="editor"></textarea>
     <div id="bottom-bar">
       <input type="text" id="input">
       <button id="run">Run</button>
     </div>
   </div>
   <script>
-    let $ = document.querySelector.bind(document);
+    window.$ = document.querySelector.bind(document);
     $('#display').value = 'Welcome to Piccolo :3\n\nWhat is this? See:\nhttps://github.com/Wattle-bird/piccolo\n==='
     window.stack = [];
     window.pop = () => window.stack.pop();
@@ -66,7 +71,7 @@
     }
 
     window.interpret = (line) => {
-      let tokens = line.split(' ');
+      let tokens = line.split(/\s/);
       tokens.forEach((t) => {
         interpretToken(t);
       })
@@ -187,7 +192,9 @@
       'wordsarray': '" Object.keys(dict) " js',
       'words': 'wordsarray " pop().join(` `) " js print',
       'show': '" dict[pop()] " js print',
-      'dict': '"dictPretty()" js'
+      'dict': '"dictPretty()" js',
+      '$': '"$(pop())" js',
+      'run': '"#editor" $ "interpret(pop().value)" js' // TODO TEST THIS
     }
   </script>
 </body>
