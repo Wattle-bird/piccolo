@@ -1,0 +1,22 @@
+- editor
+  - X break tokens by any whitespace
+  - X text box and run
+  - upload file
+  - download file
+  - runtime display?
+  - make the editor a regular program?
+- set up file sync
+- make something!
+- better string handling
+  - tell quotes apart
+  - handle escapes better
+  - 'str' delimiters
+  - newline escapes
+- dash delimit multi-words
+- minimize internal words and move to extras doc
+- document internal words
+- variables
+  - get by referencing its name
+  - set by referencing its name ending in comma
+- compile time functions
+- better display
