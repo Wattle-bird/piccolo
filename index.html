@@ -25,6 +25,10 @@
       flex-grow: 1;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     #bottom-bar {
       display: flex;
     }
@@ -46,7 +50,7 @@
       <textarea id="console" class="editor"></textarea>
       <textarea id="editor" class="editor"></textarea>
     </div>  
-    <div id="display" style="display: none;"></div>
+    <div id="display" class="hidden"></div>
     <div id="bottom-bar">
       <input type="text" id="input">
       <button id="run">Run</button>
@@ -209,8 +213,8 @@
       'run': '"#editor" $ "interpret(pop().value)" js',
       'set': '"vars[pop()] = pop()" jsd',
       'drop-all': '"stack = []" jsd',
-      'display': '"$(`#display`).style.display = `block`;$(`#default-view`).style.display = `none`" jsd',
-      'editor': '"$(`#default-view`).style.display = `flex`;$(`#display`).style.display = `none`" jsd'
+      'display': '"$(`#display`).classList.remove(`hidden`);$(`#default-view`).classList.add(`hidden`)" jsd',
+      'editor': '"$(`#default-view`).classList.remove(`hidden`);$(`#display`).classList.add(`hidden`)" jsd'
     }
   </script>
 </body>
