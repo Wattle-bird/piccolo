@@ -75,6 +75,7 @@
     
     function printStack() {
       let str = "> ";
+      if (mode != "normal") str = `${mode}>`
       window.stack.forEach((item) => {
         str += JSON.stringify(item);
         str += ' ';
@@ -107,10 +108,8 @@
         window.stack.push(Number(token));
         return;
       }
-      if (token[0] == '"' || token[0] == "'") {
-        token = token.slice(1);
+      if (token == '"' || token == "'") {
         mode = "string";
-        stringMode(token);
         return;
       }
       token = token.toLowerCase();
@@ -139,17 +138,9 @@
       if (stringBuffer.length !== 0) {
         stringBuffer += ' ';
       }
-
       let lastChar = token.slice(-1);
       if (token == '\\"' || token == "\\'") {
         token = '"'
-      } else if (lastChar == '"' || lastChar == "'") {
-        token = token.slice(0, -1);
-        mode = "normal";
-        stringBuffer += token;
-        stack.push(stringBuffer);
-        stringBuffer = '';
-        return;
       }
       stringBuffer += token;
     }
@@ -213,16 +204,16 @@
       'word-sarray': '" Object.keys(dict) " js',
       'words': 'word-sarray " pop().join(` `) " js print',
       'dict-object': '" dict " js',
-      'dict': 'dict-object "objectPretty(pop())" jsd',
-      'vars-object': '"vars" js',
-      'vars': 'vars-object "objectPretty(pop())" jsd',
+      'dict': 'dict-object " objectPretty(pop()) " jsd',
+      'vars-object': '" vars " js',
+      'vars': 'vars-object " objectPretty(pop()) " jsd',
       'show': '" dict[pop()] " js print',
-      '$': '"$(pop())" js',
-      'run': '"#editor" $ "interpret(pop().value)" js',
-      'set': '"vars[pop()] = pop()" jsd',
-      'drop-all': '"stack = []" jsd',
-      'display': '"$(`#display`).classList.remove(`hidden`);$(`#default-view`).classList.add(`hidden`)" jsd',
-      'editor': '"$(`#default-view`).classList.remove(`hidden`);$(`#display`).classList.add(`hidden`)" jsd'
+      '$': '" $(pop()) " js',
+      'run': '" #editor " $ " interpret(pop().value) " js',
+      'set': '" vars[pop()] = pop() " jsd',
+      'drop-all': '" stack = [] " jsd',
+      'display': '" $(`#display`).classList.remove(`hidden`);$(`#default-view`).classList.add(`hidden`) " jsd',
+      'editor': '" $(`#default-view`).classList.remove(`hidden`);$(`#display`).classList.add(`hidden`) " jsd'
     }
   </script>
 </body>
