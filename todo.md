@@ -1,17 +1,16 @@
-- variables
-  - set by referencing its name ending in comma
-- editor
-  - upload file
-  - download file
 - set up file sync
 - make something!
-- better string handling
-  - tell quotes apart
-  - handle escapes better
-  - 'str' delimiters
-  - newline escapes
 - dash delimit multi-words
 - minimize internal words and move to extras doc
 - document internal words
 - compile time functions
-- better display
+- editor i/o?
+  - upload file
+  - download file
+- better string handling?
+  - tell quotes apart
+  - handle escapes better
+  - 'str' delimiters
+  - newline escapes
+- variables
+  - set by referencing its name ending in comma?
